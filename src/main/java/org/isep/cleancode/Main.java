@@ -1,25 +1,26 @@
 package org.isep.cleancode;
 
 import static spark.Spark.*;
+import org.isep.cleancode.presentation.TodoController;
 
 public class Main {
     public static void main(String[] args) {
-        // Configuration réseau
-        port(8080);
-        ipAddress("0.0.0.0");  // Écoute sur toutes les interfaces
+        // Configuration
+        port(9090); // Port modifié pour éviter les conflits
+        ipAddress("0.0.0.0");
         
-        // Configuration CORS
-        before((req, res) -> {
-            res.header("Access-Control-Allow-Origin", "*");
-            res.header("Access-Control-Allow-Methods", "GET,POST");
-        });
-
+        // Contrôleur
+        TodoController controller = new TodoController();
+        
+        // Routes
+        get("/todos", controller::getAllTodos);
+        post("/todos", controller::createTodo);
+        
         // Route test
-        get("/ping", (req, res) -> "pong");
-
+        get("/ping", (req, res) -> "API OK");
+        
         // Initialisation
         awaitInitialization();
-        System.out.println("Server running on http://localhost:8080");
+        System.out.println("Server ready with all endpoints");
     }
 }
-
