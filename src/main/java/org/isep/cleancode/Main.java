@@ -1,17 +1,25 @@
 package org.isep.cleancode;
 
 import static spark.Spark.*;
-import com.google.gson.Gson;
 
 public class Main {
-    private static final TodoController todoController = new TodoController();
-
     public static void main(String[] args) {
-        port(4567);
+        // Configuration réseau
+        port(8080);
+        ipAddress("0.0.0.0");  // Écoute sur toutes les interfaces
+        
+        // Configuration CORS
+        before((req, res) -> {
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Methods", "GET,POST");
+        });
 
-        get("/todos", todoController::getAllTodos);
+        // Route test
+        get("/ping", (req, res) -> "pong");
 
-        post("/todos", todoController::createTodo);
+        // Initialisation
+        awaitInitialization();
+        System.out.println("Server running on http://localhost:8080");
     }
 }
 
